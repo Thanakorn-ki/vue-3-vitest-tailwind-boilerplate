@@ -10,6 +10,10 @@ onMounted(async () => {
         await liff.init({
             liffId: import.meta.env.VITE_LIFF_ID
         })
+        if (!liff.isLoggedIn()) {
+            await liff.login()
+            return;
+        }
         message.value = "LIFF init succeeded.";
         profile.value = await liff.getProfile()
 
