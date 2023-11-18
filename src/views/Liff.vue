@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import liff from "@line/liff";
 import { onMounted, ref } from "vue";
+export interface Profile {
+    userId: string;
+    displayName: string;
+    pictureUrl?: string;
+    statusMessage?: string;
+}
 
 const message = ref('')
-const profile = ref({})
+const profile = ref<Profile>({
+    userId: "",
+    displayName: "",
+})
 
+const context = ref<Object | null>({})
 onMounted(async () => {
     try {
         await liff.init({
@@ -16,6 +26,7 @@ onMounted(async () => {
         }
         message.value = "LIFF init succeeded.";
         profile.value = await liff.getProfile()
+        context.value = liff.getContext();
 
     } catch (e) {
         message.value = "LIFF init failed.";
@@ -32,6 +43,9 @@ onMounted(async () => {
             <div>
                 {{ profile }}
                 <img :src="profile.pictureUrl" alt="pictureUrl">
+            </div>
+            <div>
+                {{ context }}
             </div>
         </div>
 
